@@ -1,5 +1,8 @@
-name: 'GitHub Latest Release'
+name: 'GitHub Repository Latest Release'
 description: 'Fetch Latest Release of GitHub Repository'
+branding:
+  icon: 'tag'
+  color: 'green'
 inputs:
   owner:
     description: 'Repository owner.'
