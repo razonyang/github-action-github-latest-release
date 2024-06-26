@@ -1,0 +1,25 @@
+name: 'GitHub Latest Release'
+description: 'Fetch Latest Release of GitHub Repository'
+inputs:
+  owner:
+    description: 'Repository owner.'
+    required: true
+  name:
+    description: 'Repository name.'
+    required: true
+  prefix:
+    description: 'Remove the prefix from version if present.'
+    default: ''
+outputs:
+  version:
+    description: 'The latest tag name.'
+    value: ${{ steps.release.outputs.tag_name }}
+runs:
+  using: 'composite'
+  steps:
+    - id: release
+      shell: bash
+      run: |
+        curl https://api.github.com/repos/${{ inputs.owner }}/${{ inputs.name }}/releases/latest -s > response.out
+        tagName=$(jq '.tag_name // empty' -r response.out)
+        echo "tag_name=${tagName#"${{ inputs.prefix }}"}" >> $GITHUB_OUTPUT

@@ -1,0 +1,41 @@
+on: [push]
+
+jobs:
+  github_latest_release_job:
+    strategy:
+      matrix:
+        include:
+          - owner: razonyang
+            name: foo-bar-fizz-buzz
+            version: 'v1.2.3'
+          - owner: razonyang
+            name: foo-bar-fizz-buzz
+            prefix: 'v'
+            version: '1.2.3'
+          - owner: razonyang
+            name: foo-bar-fizz-buzz
+            prefix: 'x'
+            version: 'v1.2.3'
+          - owner: razonyang
+            name: repository-does-not-exist
+            version: ''
+          - owner: razonyang
+            prefix: 'v'
+            name: repository-does-not-exist
+            version: ''
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - id: release
+        uses: ./
+        with:
+          owner: ${{ matrix.owner }}
+          name: ${{ matrix.name }}
+          prefix: ${{ matrix.prefix }}
+      - run: |
+          if [[ '${{ steps.release.outputs.version }}' != '${{ matrix.version }}' ]];
+          then
+            echo 'expected version "${{ matrix.version }}", got "${{ steps.release.outputs.version }}".'
+            exit 1;
+          fi
+        shell: bash
