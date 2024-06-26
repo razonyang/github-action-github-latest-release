@@ -9,9 +9,8 @@ jobs:
   github_latest_release_job:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - id: release
-        uses: razonyang/github-action-github-latest-release
+      - id: release # used to read version in other steps.
+        uses: razonyang/github-action-github-latest-release@v1
         with:
           owner: razonyang
           name: foo-bar-fizz-buzz
